@@ -1,3 +1,9 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def todo_home_page(request):
+    """Функция-представление главной(домашней) страницы"""
+    return render(request, 'home.html',
+                  {
+                      'title': 'Главная'
+                  })
