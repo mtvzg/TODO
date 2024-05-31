@@ -30,4 +30,4 @@ class Task(models.Model):
 
     def formatted_importance(self):
         """Функция для красивого отображения важности задачи"""
-        return 'Важно!' if self.importance else 'Не очень важно, но сделать надо.'
+        return 'Важно!' if self.importance else '...'
