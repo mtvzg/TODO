@@ -1,0 +1,45 @@
+{% extends 'todo_base.html' %}
+{% block content %}
+    <div class="container">
+    <form method="post" class="form-multiline">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">Добавить задачу.</button>
+    </form>
+    </div>
+    <div class="container">
+        <h4 class="mt-5">Мой список дел</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Что надо сделать?</th>
+                    <th>Создано</th>
+                    <th>Дедлайн</th>
+                    <th>Важность</th>
+                    <th>Статус</th>
+                    <th>Действие</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr class="{% if task.is_completed %}completed-task{% endif %}">
+                    <td>{{ task.title }}</td>
+                    <td>{{ task.formatted_creation_date }}</td>
+                    <td>{{ task.formatted_deadline }}</td>
+                    <td>{{ task.formatted_importance }}</td>
+                    <td>
+                        <a href="{% url 'task_status' task.id %}" class="btn btn-sm btn-outline-primary">
+                            {% if task.is_completed %} Возобновить {% else %} Завершить {% endif %}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'delete_task' task.id %}" class="btn btn-sm btn-outline-primary">
+                            {% if task %} Удалить из списка {% endif %}
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
