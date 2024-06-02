@@ -29,6 +29,7 @@ def todo_home_page(request):
 
 
 def task_status(request, task_id):
+    """Функция для изменения статуса задачи (Выполнено/В работе и наоборот)"""
     task = get_object_or_404(Task, id=task_id)
     task.is_completed = not task.is_completed
     task.save()
@@ -36,6 +37,7 @@ def task_status(request, task_id):
 
 
 def delete_task(request, task_id):
+    """Функция для удаления задачи из модели"""
     task = get_object_or_404(Task, id=task_id)
     task.delete()
     return redirect('todo_home')
