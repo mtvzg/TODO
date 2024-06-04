@@ -33,6 +33,11 @@
                         </a>
                     </td>
                     <td>
+                        <a href="{% url 'update_task' task.id %}" class="btn btn-sm btn-outline-primary">
+                            Редактировать задачу
+                        </a>
+                    </td>
+                    <td>
                         <a href="{% url 'delete_task' task.id %}" class="btn btn-sm btn-outline-primary">
                             {% if task %} Удалить из списка {% endif %}
                         </a>
