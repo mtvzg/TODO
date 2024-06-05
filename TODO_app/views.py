@@ -5,13 +5,16 @@ from babel.dates import format_datetime
 from datetime import datetime
 
 from TODO_app.forms import TaskForm
-from TODO_app.models import Task
+from TODO_app.models import Task, Task_Category
 
 
 def todo_home_page(request):
-    """Функция-представление главной страницы проекта"""
+    """Функция-представление главной страницы проекта - здесь хранится текущая дата, для вывода в шапке приложения,
+    задачи из базы данных и категории задач"""
     current_date = format_datetime(datetime.now(), 'EEE dd.MM.yy', locale='ru').capitalize()
     tasks = Task.objects.all()
+    categories = Task_Category.objects.all()
+
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
@@ -19,12 +22,14 @@ def todo_home_page(request):
             return redirect('todo_home')
     else:
         form = TaskForm()
+
     return render(request, 'todo_home.html',
                   {
                       'title': 'Главная',
                       'date': current_date,
                       'tasks': tasks,
-                      'form': form
+                      'form': form,
+                      'task_categories': categories
                   })
 
 

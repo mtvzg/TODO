@@ -1,13 +1,31 @@
 {% extends 'todo_base.html' %}
+
 {% block content %}
     <div class="container">
-    <form method="post" class="form-multiline">
-        {% csrf_token %}
-        {{ form }}
-        <button type="submit">Добавить задачу.</button>
-    </form>
-    </div>
-    <div class="container">
+        <!-- Кнопка для открытия модального окна добавления задачи -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTaskModal">
+            Добавить задачу
+        </button>
+
+        <!-- Модальное окно добавления задачи -->
+        <div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addTaskModalLabel">Добавить новую задачу</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" id="addTaskForm">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="btn btn-primary">Добавить задачу</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <h4 class="mt-5">Мой список дел</h4>
         <table class="table table-striped">
             <thead>
@@ -16,6 +34,7 @@
                     <th>Создано</th>
                     <th>Дедлайн</th>
                     <th>Важность</th>
+                    <th>Категория</th>
                     <th>Статус</th>
                     <th>Действие</th>
                 </tr>
@@ -27,20 +46,39 @@
                     <td>{{ task.formatted_creation_date }}</td>
                     <td>{{ task.formatted_deadline }}</td>
                     <td>{{ task.formatted_importance }}</td>
+                    <td>{{ task.formatted_category }}</td>
                     <td>
                         <a href="{% url 'task_status' task.id %}" class="btn btn-sm btn-outline-primary">
                             {% if task.is_completed %} Возобновить {% else %} Завершить {% endif %}
                         </a>
                     </td>
                     <td>
-                        <a href="{% url 'update_task' task.id %}" class="btn btn-sm btn-outline-primary">
-                            Редактировать задачу
-                        </a>
-                    </td>
-                    <td>
                         <a href="{% url 'delete_task' task.id %}" class="btn btn-sm btn-outline-primary">
-                            {% if task %} Удалить из списка {% endif %}
+                            Удалить
                         </a>
+                        <!-- Кнопка для открытия модального окна редактирования -->
+                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editTaskModal{{ task.id }}">
+                            Редактировать
+                        </button>
+
+                        <!-- Модальное окно редактирования задачи -->
+                        <div class="modal fade" id="editTaskModal{{ task.id }}" tabindex="-1" aria-labelledby="editTaskModalLabel{{ task.id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editTaskModalLabel{{ task.id }}">Редактировать задачу</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="post" action="{% url 'update_task' task.id %}">
+                                            {% csrf_token %}
+                                            {{ form.as_p }}
+                                            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 {% endfor %}
