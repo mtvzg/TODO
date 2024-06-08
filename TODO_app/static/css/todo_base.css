@@ -21,4 +21,10 @@
     color: grey;
 }
 
+.indentation {
+    margin-top: 20px;
+}
 
+.left {
+    margin-left: 20px;
+}

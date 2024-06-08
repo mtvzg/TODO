@@ -18,21 +18,71 @@
           href="{% static 'favicon.ico' %}"
     >
   </head>
+
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container">
-        <a class="navbar-brand" href="#">Mой TODO</a>
+        <a class="navbar-brand" href="{% url 'todo_home' %}">Mой TODO</a>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <!-- возможно будут какие-то ещё пункты пока хз -->
+            <li>
+                {{ user.username }}
+            </li>
           </ul>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'logout' %}">Выход</a>
+                    {% endif %}
+                </li>
+            </ul>
           <span class="navbar-text">
             {{ date }}
           </span>
-          <!-- здесь будет показываться погода и инфо о текущем пользователе -->
         </div>
       </div>
     </nav>
+
+    <div class="container">
+        <!-- Модальное окно добавления задачи -->
+        <div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addTaskModalLabel">Добавить новую задачу</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" id="addTaskForm">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="btn btn-primary">Добавить задачу</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Модальное окно редактирования задачи -->
+            {% for task in tasks %}
+                        <div class="modal fade" id="editTaskModal{{ task.id }}" tabindex="-1" aria-labelledby="editTaskModalLabel{{ task.id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editTaskModalLabel{{ task.id }}"> Редактировать задачу</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="post" action="{% url 'update_task' task.id %}">
+                                            {% csrf_token %}
+                                            {{ task.form.as_p }}
+                                            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            {% endfor %}
+    </div>
     <div class="container">
       {% block content %}
       {% endblock %}

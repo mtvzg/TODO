@@ -1,0 +1,17 @@
+{% extends 'todo_base.html' %}
+<title>TODO | {{ title }}</title>
+{% block content %}
+    <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Войти</button>
+    <a href="{% url 'register' %}" class="btn btn-primary">Зарегистрироваться</a>
+    </form>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="container">
+                <div class="alert alert-danger indentation" role="alert">{{ message }}</div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

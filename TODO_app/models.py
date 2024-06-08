@@ -1,5 +1,7 @@
+from django.contrib.auth.models import User
 from django.db import models
 from babel.dates import format_datetime
+from django import forms
 
 
 class Task_Category(models.Model):
@@ -17,10 +19,15 @@ class Task(models.Model):
     deadline = models.DateTimeField(null=True, blank=True)
     importance = models.BooleanField(default=False)
     category = models.ForeignKey(Task_Category, on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
 
     class Meta:
         ordering = ['is_completed', '-id']
         # это нужно для того, чтобы поля сортировались на уровне модели - по статусу выполнения и ID
+
+    @property
+    def form(self):
+        return TaskForm(instance=self)
 
     def __str__(self):
         return self.title
@@ -47,3 +54,81 @@ class Task(models.Model):
             return f'#{self.category}'
         else:
             return '...'
+
+
+class TaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ['title', 'deadline', 'importance', 'category']
+        labels = {
+            'title': 'Задача',
+            'deadline': 'Завершить до...',
+            'importance': 'Важная задача?',
+            'category': 'Категория задачи'
+        }
+        widgets = {
+            'title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Что надо сделать?'
+            }),
+            'deadline': forms.DateTimeInput(attrs={
+                'class': 'form-control',
+                'type': 'datetime-local'
+            }),
+            'importance': forms.CheckboxInput(attrs={
+                'class': 'form-check-input',
+                'type': 'checkbox',
+                'role': 'switch',
+                'id': 'flexSwitchCheckDefault'
+            }),
+            'category': forms.Select(attrs={
+                'class': 'form-select'
+            }),
+        }
+
+
+class RegisterUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'password', 'first_name', 'last_name']
+        labels = {
+            'username': 'Логин',
+            'password': 'Пароль',
+            'first_name': 'Имя',
+            'last_name': 'Фамилия'
+        }
+        widgets = {
+            'username': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Введите логин'
+            }),
+            'password': forms.PasswordInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Введите пароль'
+            }),
+            'first_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Введите имя'
+            }),
+            'last_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Введите фамилию'
+            })
+        }
+
+
+class LogInUserForm(forms.Form):
+    username = forms.CharField(
+        label='Логин',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Введите логин'
+        })
+    )
+    password = forms.CharField(
+        label='Пароль',
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Введите пароль'
+        })
+    )
