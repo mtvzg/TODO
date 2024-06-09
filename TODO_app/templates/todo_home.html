@@ -2,12 +2,6 @@
 
 {% block content %}
     <div class="container">
-        <!-- Кнопка для открытия модального окна добавления задачи -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTaskModal">
-            Добавить задачу
-        </button>
-    </div>
-    <div class="container">
     <h4 class="mt-5">Список задач.</h4>
         {% if not tasks %}
             <h6 class="mt-5">Список задач будет ниже. Необходимо добавить задачи.</h6>

@@ -28,3 +28,11 @@
 .left {
     margin-left: 20px;
 }
+
+.custom-left {
+    padding-left: 30px;
+}
+
+.body-margin {
+    margin-top: 70px;
+}

@@ -20,28 +20,51 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container">
-        <a class="navbar-brand" href="{% url 'todo_home' %}">Mой TODO</a>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li>
-                {{ user.username }}
-            </li>
-          </ul>
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li>
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'logout' %}">Выход</a>
-                    {% endif %}
-                </li>
-            </ul>
-          <span class="navbar-text">
-            {{ date }}
-          </span>
-        </div>
-      </div>
-    </nav>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'todo_home' %}">TODO</a>
+    <div class="navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+            {% if user.is_authenticated %}
+              <a class="nav-link" href="{% url 'logout' %}">Выход</a>
+          {% endif %}
+        </li>
+      </ul>
+      <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">
+            {% if user.is_authenticated %}
+                {% if not tasks %}
+                    Список задач будет ниже. Необходимо добавить задачи.
+                {% elif uncompleted_tasks == 0 %}
+                    Завершены все задачи.
+                {% else %}
+                    Количество незавершенных задач - {{ uncompleted_tasks }}
+                {% endif %}
+            {% endif %}
+            </a>
+        </li>
+      </ul>
+      <form class="d-flex">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{{ user.username }}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{{ date }}</a>
+        </li>
+      </ul>
+        <!-- Кнопка для открытия модального окна добавления задачи -->
+            {% if user.is_authenticated %}
+        <button type="button" class="btn btn-outline-success left" data-bs-toggle="modal" data-bs-target="#addTaskModal">
+            Добавить задачу
+        </button>
+            {% endif %}
+      </form>
+    </div>
+  </div>
+</nav>
 
     <div class="container">
         <!-- Модальное окно добавления задачи -->
@@ -83,7 +106,7 @@
                         </div>
             {% endfor %}
     </div>
-    <div class="container">
+    <div class="container body-margin">
       {% block content %}
       {% endblock %}
     </div>

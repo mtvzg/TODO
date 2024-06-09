@@ -11,7 +11,7 @@ from TODO_app.models import Task, Task_Category, TaskForm, LogInUserForm, Regist
 
 @login_required
 def todo_home_page(request):
-    """Функция-представление главной страницы проекта - здесь хранится текущая дата, для вывода в шапке приложения,
+    """Функция-представление главной страницы проекта - здесь хранится текущая дата, для вывода в шапке приложения
     задачи из базы данных и категории задач"""
     current_date = format_datetime(datetime.now(), 'EEE dd.MM.yy', locale='ru').capitalize()
     tasks = Task.objects.filter(user_id=request.user.id)
