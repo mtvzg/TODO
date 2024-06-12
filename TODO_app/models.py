@@ -34,26 +34,27 @@ class Task(models.Model):
 
     def formatted_creation_date(self):
         """Функция для красивого отображения даты создания задачи"""
-        return format_datetime(self.creation_date, 'EEE dd.MM.yy', locale='ru').title()
+        date = format_datetime(self.creation_date, 'EEE dd.MM.yy', locale='ru').title()
+        return f'Создано в {date}'
 
     def formatted_deadline(self):
         """Функция для красивого отображения дедлайна"""
         if self.deadline:
             deadline = format_datetime(self.deadline, 'EEE dd.MM.yy', locale='ru').title()
-            return f'Завершить до {deadline}'
+            return f'Нужно завершить до {deadline}'
         else:
-            return 'Нет дедлайна...'
+            return ''
 
     def formatted_importance(self):
         """Функция для красивого отображения важности задачи"""
-        return 'Важно!' if self.importance else '...'
+        return 'Важная задача!' if self.importance else ''
 
     def formatted_category(self):
         """Функция для красивого отображения категорий задач"""
         if self.category:
             return f'#{self.category}'
         else:
-            return '...'
+            return ''
 
 
 class TaskForm(forms.ModelForm):

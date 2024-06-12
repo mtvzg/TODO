@@ -17,7 +17,6 @@ def todo_home_page(request):
     tasks = Task.objects.filter(user_id=request.user.id)
     categories = Task_Category.objects.all()
     uncompleted_tasks = Task.objects.filter(user_id=request.user.id, is_completed=False).count()
-    completed_tasks = Task.objects.filter(user_id=request.user.id, is_completed=True).count()
 
     if request.method == 'POST':
         form = TaskForm(request.POST)
@@ -36,8 +35,7 @@ def todo_home_page(request):
                       'tasks': tasks,
                       'form': form,
                       'task_categories': categories,
-                      'uncompleted_tasks': uncompleted_tasks,
-                      'completed_tasks': completed_tasks
+                      'uncompleted_tasks': uncompleted_tasks
                   })
 
 

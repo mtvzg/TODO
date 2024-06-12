@@ -1,52 +1,53 @@
 {% extends 'todo_base.html' %}
 
 {% block content %}
-    <div class="container">
-    <h4 class="mt-5">Список задач.</h4>
-        {% if not tasks %}
-            <h6 class="mt-5">Список задач будет ниже. Необходимо добавить задачи.</h6>
-        {% elif uncompleted_tasks == 0 %}
-            <h6 class="mt-5">Завершены все задачи.</h6>
-        {% else %}
-            <h6 class="mt-5">Количество незавершенных - {{ uncompleted_tasks }}</h6>
-        {% endif %}
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Что надо сделать?</th>
-                    <th>Создано</th>
-                    <th>Дедлайн</th>
-                    <th>Важность</th>
-                    <th>Категория</th>
-                    <th>Статус</th>
-                    <th>Действие</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for task in tasks %}
-                <tr class="{% if task.is_completed %}completed-task{% endif %}">
-                    <td>{{ task.title }}</td>
-                    <td>{{ task.formatted_creation_date }}</td>
-                    <td>{{ task.formatted_deadline }}</td>
-                    <td>{{ task.formatted_importance }}</td>
-                    <td>{{ task.formatted_category }}</td>
-                    <td>
-                        <a href="{% url 'task_status' task.id %}" class="btn btn-sm btn-outline-primary">
-                            {% if task.is_completed %} Возобновить {% else %} Завершить {% endif %}
-                        </a>
-                    </td>
-                    <td>
-                        <a href="{% url 'delete_task' task.id %}" class="btn btn-sm btn-outline-primary">
-                            Удалить
-                        </a>
-                        <!-- Кнопка для открытия модального окна редактирования -->
-                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editTaskModal{{ task.id }}">
-                            Редактировать
-                        </button>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    {% if tasks %}
+    {% for task in tasks %}
+    <div class="container todo-color task-block">
+        <div class="container title-area title-align">
+        <p class="color-options {% if task.is_completed %} completed-task {% endif %}">{{ task.title }}</p>
+        <p class="category-block">
+            {{ task.formatted_category }}
+        </p>
+        </div>
+        <div class="container color-options task-options">
+            <div class="container">
+                {% if task.is_completed %}
+                    Завершено в {{ date }}
+                {% else %}
+                    {{ task.formatted_creation_date }}
+                    {{ task.formatted_deadline }}
+                    <span class="important-task">{{ task.formatted_importance }}</span>
+                {% endif %}
+            </div>
+            <div class="controls-block btn-group">
+                <a href="{% url 'task_status' task.id %}" class="btn btn-outline-success btn-sm">
+                    {% if task.is_completed %}
+                        Возобновить
+                    {% else %}
+                        Завершить
+                    {% endif %}
+                </a>
+                <button type="button" class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editTaskModal{{ task.id }}">
+                    Редактировать
+                </button>
+                <a href="{% url 'delete_task' task.id %}" class="btn btn-outline-danger btn-sm">
+                    Удалить
+                </a>
+            </div>
+        </div>
     </div>
+    {% endfor %}
+    {% else %}
+        <div class="not-task-container">
+        <p>
+            Добавьте свою первую задачу...
+        </p>
+        <div class="full-screen-button-container">
+            <button class="btn btn-outline-success w-100 p-3" type="button" data-bs-toggle="modal" data-bs-target="#addTaskModal">
+                +
+            </button>
+        </div>
+        </div>
+    {% endif %}
 {% endblock %}
