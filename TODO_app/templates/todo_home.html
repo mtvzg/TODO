@@ -5,7 +5,10 @@
     {% for task in tasks %}
     <div class="container todo-color task-block">
         <div class="container title-area title-align">
-        <p class="color-options {% if task.is_completed %} completed-task {% endif %}">{{ task.title }}</p>
+        <p class="color-options {% if task.is_completed %} completed-task {% endif %}
+        {% if task.is_expired %} expired-task {% endif %}">
+            {{ task.title }}
+        </p>
         <p class="category-block">
             {{ task.formatted_category }}
         </p>
@@ -17,7 +20,12 @@
                 {% else %}
                     {{ task.formatted_creation_date }}
                     {{ task.formatted_deadline }}
-                    <span class="important-task">{{ task.formatted_importance }}</span>
+                    <span class="important-task">
+                        {{ task.formatted_importance }}
+                        {% if task.is_expired %}
+                            <span class="expired-task-style">Задача просрочена!</span>
+                        {% endif %}
+                    </span>
                 {% endif %}
             </div>
             <div class="controls-block btn-group">

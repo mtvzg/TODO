@@ -1,9 +1,12 @@
 {% extends 'todo_base.html' %}
 <title>TODO | {{ title }}</title>
 {% block content %}
+    <div class="register-container">
+    <p>Регистрация в TODO</p>
     <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+    <button type="submit" class="btn btn-outline-info">Регистрация</button>
     </form>
+    </div>
 {% endblock %}

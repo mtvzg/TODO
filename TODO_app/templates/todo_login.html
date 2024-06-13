@@ -1,15 +1,22 @@
 {% extends 'todo_base.html' %}
 <title>TODO | {{ title }}</title>
 {% block content %}
+    <div class="login-align">
+    <div class="login-container">
+        <p>Добро пожаловать в TODO!</p>
     <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Войти</button>
-    <a href="{% url 'register' %}" class="btn btn-primary">Зарегистрироваться</a>
+    <div class="btn-group full-screen-button-container-login">
+    <button type="submit" class="btn btn-outline-success">Войти</button>
+    <a href="{% url 'register' %}" class="btn btn-outline-info">Зарегистрироваться</a>
+    </div>
     </form>
+    </div>
+    </div>
     {% if messages %}
         {% for message in messages %}
-            <div class="container">
+            <div class="message-container">
                 <div class="alert alert-danger indentation" role="alert">{{ message }}</div>
             </div>
         {% endfor %}

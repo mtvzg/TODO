@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib.auth.models import User
 from django.db import models
 from babel.dates import format_datetime
@@ -24,6 +26,13 @@ class Task(models.Model):
     class Meta:
         ordering = ['is_completed', '-id']
         # это нужно для того, чтобы поля сортировались на уровне модели - по статусу выполнения и ID
+
+    @property
+    def is_expired(self):
+        if not self.deadline:
+            return False
+
+        return self.deadline.date() < datetime.now().date() and not self.is_completed
 
     @property
     def form(self):
@@ -120,14 +129,14 @@ class RegisterUserForm(forms.ModelForm):
 
 class LogInUserForm(forms.Form):
     username = forms.CharField(
-        label='Логин',
+        label='',
         widget=forms.TextInput(attrs={
             'class': 'form-control',
             'placeholder': 'Введите логин'
         })
     )
     password = forms.CharField(
-        label='Пароль',
+        label='',
         widget=forms.PasswordInput(attrs={
             'class': 'form-control',
             'placeholder': 'Введите пароль'
