@@ -7,6 +7,7 @@ from django import forms
 
 
 class Task_Category(models.Model):
+    """Модель для хранения категорий задач"""
     title = models.CharField(max_length=100)
 
     def __str__(self):
